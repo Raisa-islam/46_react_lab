@@ -4,18 +4,35 @@ import NumberInputField from './components/NumberInputField';
 import TaskManager from './components/TaskManager'; // Import the TaskManager component
 
 function App() {
+  
   const [inputFields, setInputFields] = useState([]);
   const [total, setTotal] = useState(0);
-  const [showTaskManager, setShowTaskManager] = useState(false); // State to toggle the visibility of TaskManager
 
   const handleAddInputField = () => {
-    setInputFields([...inputFields, <NumberInputField key={inputFields.length} onInputChange={handleInputChange} />]);
+    setInputFields([...inputFields, { key: inputFields.length, value: '', onDelete: handleDeleteInputField }]);
   };
 
-  const handleInputChange = (value) => {
-    setTotal((prevTotal) => prevTotal + (isNaN(value) ? 0 : parseFloat(value)));
+  const handleInputChange = (index, value) => {
+    const newInputFields = [...inputFields];
+    newInputFields[index].value = value;
+    setInputFields(newInputFields);
+
+    let newTotal = 0;
+    newInputFields.forEach(({ value }) => {
+      newTotal += isNaN(value) ? 0 : parseFloat(value);
+    });
+    setTotal(newTotal);
+  };
+  const handleDeleteInputField = (index, value) => {
+    const newInputFields = inputFields.filter((_, i) => i !== index);
+    setInputFields(newInputFields);
+
+    let newTotal = total;
+    newTotal -= isNaN(value) ? 0 : parseFloat(value);
+    setTotal(newTotal);
   };
 
+  const [showTaskManager, setShowTaskManager] = useState(false); // State to toggle the visibility of TaskManager
   const handleToggleTaskManager = () => {
     setShowTaskManager(!showTaskManager); // Toggle the state to show/hide TaskManager
   };
@@ -24,11 +41,17 @@ function App() {
     <>
       <div className='container mx-auto flex flex-col gap-4'>
         <div>
-          <button className="btn btn-primary text-white" onClick={handleAddInputField}>Add Input Field</button>
-          {inputFields.map((inputField, index) => (
-            <div key={index}>{inputField}</div>
-          ))}
-          {total !== 0 && <div><h2>Total: {total}</h2></div>} {/* Show total if it's not zero */}
+        <button className="btn btn-primary text-white" onClick={handleAddInputField}>Add Input Field</button>
+        {inputFields.map(({ key, value }, index) => (
+          <div key={key}>
+            <NumberInputField
+              value={value}
+              onInputChange={(newValue) => handleInputChange(index, newValue)}
+              onDelete={() => handleDeleteInputField(index, value)}
+            />
+          </div>
+        ))}
+        {total !== 0 && <div><h2>Total: {total}</h2></div>}
         </div>
         <div>
           <button className="btn btn-primary text-white" onClick={handleToggleTaskManager}>Add New Task</button> {/* Button to toggle TaskManager */}
