@@ -23,7 +23,7 @@ function App() {
   return (
     <>
       <div className='container mx-auto'>
-        <button className="btn btn-primary" onClick={handleAddInputField}>Add Input Field</button>
+        <button className="btn btn-primary text-white" onClick={handleAddInputField}>Add Input Field</button>
         {inputFields.map((inputField, index) => (
           <div key={index}>{inputField}</div>
         ))}
