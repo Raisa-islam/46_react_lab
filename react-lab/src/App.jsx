@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './App.css';
 import NumberInputField from './components/NumberInputField';
 import TaskManager from './components/TaskManager'; // Import the TaskManager component
@@ -22,16 +22,19 @@ function App() {
 
   return (
     <>
-      <div className='container mx-auto'>
-        <button className="btn btn-primary text-white" onClick={handleAddInputField}>Add Input Field</button>
-        {inputFields.map((inputField, index) => (
-          <div key={index}>{inputField}</div>
-        ))}
+      <div className='container mx-auto flex flex-col gap-4'>
         <div>
-          <h2>Total: {total}</h2>
+          <button className="btn btn-primary text-white" onClick={handleAddInputField}>Add Input Field</button>
+          {inputFields.map((inputField, index) => (
+            <div key={index}>{inputField}</div>
+          ))}
+          {total !== 0 && <div><h2>Total: {total}</h2></div>} {/* Show total if it's not zero */}
         </div>
-        <button className="btn btn-primary text-white" onClick={handleToggleTaskManager}>Add New Task</button> {/* Button to toggle TaskManager */}
-        {showTaskManager && <TaskManager />} {/* Render TaskManager if showTaskManager is true */}
+        <div>
+          <button className="btn btn-primary text-white" onClick={handleToggleTaskManager}>Add New Task</button> {/* Button to toggle TaskManager */}
+          {showTaskManager && <TaskManager />} {/* Render TaskManager if showTaskManager is true */}
+        </div>
+
       </div>
     </>
   );

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import PropTypes from 'prop-types'; // Import PropTypes for prop validation
 
 const NumberInputField = ({ onInputChange }) => {
   const [inputValue, setInputValue] = useState('');
@@ -10,24 +11,34 @@ const NumberInputField = ({ onInputChange }) => {
 
     if (/^-?\d*\.?\d*$/.test(value)) {
       setError('');
-      onInputChange(parseFloat(value) || 0); // If the parsed value is NaN, use 0
     } else {
       setError('Please enter a valid number');
-      onInputChange(null); // Reset the value if it's not a valid number
     }
+  };
+
+  const handleBlur = () => {
+    // Trigger onInputChange only when the input field loses focus
+    onInputChange(parseFloat(inputValue) || 0);
   };
 
   return (
     <div>
-      <input className='border border-2 border-black p-1 m-2 rounded-lg'
+      <input
         type="text"
+        className='border-2 border-black p-2 m-2 rounded-lg'
         value={inputValue}
         onChange={handleChange}
+        onBlur={handleBlur} // Call handleBlur when the input field loses focus
         placeholder="Enter a number"
       />
       {error && <span style={{ color: 'red' }}>{error}</span>}
     </div>
   );
+};
+
+// Prop validation
+NumberInputField.propTypes = {
+  onInputChange: PropTypes.func.isRequired // Ensure onInputChange prop is a function and required
 };
 
 export default NumberInputField;
